@@ -3,6 +3,7 @@ const router = express.Router();
 const gravatar = require('gravatar');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+const passport = require('passport');
 
 // Load keys
 const keys = require('../../config/keys')
@@ -93,7 +94,18 @@ router.post('/login', (req, res) => {
                         return res.status(400).json({ password: 'Password did not match!' })
                     }
                 });
-        })
-})
+        });
+});
+
+// @route GET /api/users/current 
+// @desc Return current user
+// @access Private
+router.get('/current', passport.authenticate('jwt', { session: false }), (req, res) => {
+    res.json({
+        id: req.user.id,
+        name: req.user.name,
+        email: req.user.email
+    })
+});
 
 module.exports = router;
