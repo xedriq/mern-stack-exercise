@@ -4,34 +4,33 @@ import { Link } from 'react-router-dom'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { logoutUser } from '../../actions/authActions'
+import { clearCurrentProfile } from '../../actions/profileActions'
 
 class Navbar extends Component {
 
     handleLogoutClick = (e) => {
         e.preventDefault();
+        this.props.clearCurrentProfile();
         this.props.logoutUser();
-        // this.props.history.push('/');
-        window.location.href = '/login'
     }
 
     render() {
-
         const { isAuthenticated, user } = this.props.auth
 
         const authLinks = (
             <ul className="navbar-nav ml-auto">
-
-                <li className="nav-item">
-
-                    <a href="#" className="nav-link" onClick={this.handleLogoutClick}><img
+                <span className="nav-link text-lowercase">
+                    {user.name}{' '}
+                    <img
                         src={user.avatar}
                         alt={user.name}
                         title="You must have a Gravatar connected to your email to display image."
                         style={{ width: "25px", marginRight: "5px" }}
-                        className="rounded-circle"
-                    />Logout</a>
+                        className="rounded-circle" /></span>
+                <li className="nav-item">
+                    <a href="/" className="nav-link " onClick={this.handleLogoutClick}>Logout</a>
                 </li>
-            </ul>
+            </ul >
         )
 
         const guestLinks = (
@@ -46,7 +45,7 @@ class Navbar extends Component {
         )
 
         return (
-            <nav className="navbar navbar-expand-sm navbar-dark bg-dark mb-4">
+            < nav className="navbar navbar-expand-sm navbar-dark bg-dark mb-4" >
                 <div className="container">
                     <Link className="navbar-brand" to="/">DevConnector</Link>
                     <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#mobile-nav">
@@ -64,7 +63,7 @@ class Navbar extends Component {
 
                     </div>
                 </div>
-            </nav>
+            </nav >
 
         )
     }
@@ -72,11 +71,11 @@ class Navbar extends Component {
 
 Navbar.propTypes = {
     logoutUser: PropTypes.func.isRequired,
-    auth: PropTypes.object.isRequired
+    auth: PropTypes.object.isRequired,
 }
 
 const mapStateToProps = (state) => ({
     auth: state.auth,
 })
 
-export default connect(mapStateToProps, { logoutUser })(Navbar)
+export default connect(mapStateToProps, { logoutUser, clearCurrentProfile })(Navbar)
