@@ -12,7 +12,7 @@ function TextAreaFieldGroup({
 }) {
     return (
         <div className="form-group">
-            <texarea
+            <textarea
                 className={classnames("form-control form-control-lg", { 'is-invalid': error })}
                 placeholder={placeholder}
                 name={name}

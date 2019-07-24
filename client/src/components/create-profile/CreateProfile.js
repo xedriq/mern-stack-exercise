@@ -1,10 +1,12 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
+import { withRouter } from 'react-router-dom'
 import { connect } from 'react-redux'
 import TextFieldGroup from '../common/TextFieldGroup';
 import InputGroup from '../common/InputGroup';
 import SelectListGroup from '../common/SelectListGroup';
 import TextAreaFieldGroup from '../common/TextAreaFieldGroup';
+import { createProfile } from '../../actions/profileActions'
 
 
 class CreateProfile extends Component {
@@ -25,11 +27,108 @@ class CreateProfile extends Component {
             linkedin: '',
             youtube: '',
             instagram: '',
+            value: '',
             errors: {},
         }
     }
 
+    componentWillReceiveProps(nextProps) {
+        if (nextProps.errors) {
+            this.setState({ error: nextProps.errors })
+        }
+    }
+
+    onChange = (e) => {
+        this.setState({
+            [e.target.name]: e.target.value
+        })
+    }
+
+    onSubmit = (e) => {
+        e.preventDefault()
+        const profileData = {
+            handle: this.state.handle,
+            company: this.state.company,
+            website: this.state.website,
+            location: this.state.location,
+            status: this.state.status,
+            skills: this.state.skills,
+            githubusername: this.state.githubusername,
+            bio: this.state.bio,
+            twitter: this.state.twitter,
+            facebook: this.state.facebook,
+            linkedin: this.state.linkedin,
+            youtube: this.state.youtube,
+            instagram: this.state.instagram,
+        }
+
+        this.props.createProfile(profileData, this.props.history)
+    }
+
     render() {
+
+        // Select options for the status
+        const options = [
+            { label: '* Select Professional Status', value: 0 },
+            { label: 'Developer', value: 'Developer' },
+            { label: 'Junior Developer', value: 'Junior Developer' },
+            { label: 'Senior Developer', value: 'Senior Developer' },
+            { label: 'Manager', value: 'Manager' },
+            { label: 'Student or Learning', value: 'Student or Learning' },
+            { label: 'Instructor or Teacher', value: 'Instructor or Teacher' },
+            { label: 'Intern', value: 'Intern' },
+            { label: 'Other', value: 'Other' },
+
+        ];
+        let socialInputs;
+
+        if (this.state.displaySocialInputs) {
+            socialInputs = (
+                <div>
+                    <InputGroup
+                        placeholder="Twitter Profile URL"
+                        name="twitter"
+                        icon="fab fa-twitter"
+                        value={this.state.twitter}
+                        onChange={this.onChange}
+                        errors={this.props.errors.twitter}
+                    />
+                    <InputGroup
+                        placeholder="Facebook Profile URL"
+                        name="facebook"
+                        icon="fab fa-facebook"
+                        value={this.state.facebook}
+                        onChange={this.onChange}
+                        errors={this.props.errors.facebook}
+                    />
+                    <InputGroup
+                        placeholder="Linkedin Profile URL"
+                        name="linkedin"
+                        icon="fab fa-linkedin"
+                        value={this.state.linkedin}
+                        onChange={this.onChange}
+                        errors={this.props.errors.linkedin}
+                    />
+                    <InputGroup
+                        placeholder="Youtube Profile URL"
+                        name="youtube"
+                        icon="fab fa-youtube"
+                        value={this.state.youtube}
+                        onChange={this.onChange}
+                        errors={this.props.errors.youtube}
+                    />
+                    <InputGroup
+                        placeholder="Instagram Profile URL"
+                        name="instagram"
+                        icon="fab fa-instagram"
+                        value={this.state.instagram}
+                        onChange={this.onChange}
+                        errors={this.props.errors.instagram}
+                    />
+                </div>
+            )
+        };
+
         return (
             <div className="create-profile">
                 <div className="container">
@@ -38,14 +137,89 @@ class CreateProfile extends Component {
                             <h1 className="display-4 text-center">Create Your Profile</h1>
                             <p className="lead text-center">Let's get some information to make your profile stand out!</p>
                             <small className="d-block pb-3">* = required field</small>
+                            <form onSubmit={this.onSubmit}>
+                                <TextFieldGroup
+                                    placeholder="* Profile Handle"
+                                    name="handle"
+                                    value={this.state.handle}
+                                    onChange={this.onChange}
+                                    error={this.props.errors.handle}
+                                    info="A unique handle for your profile URL. Your full name, company name, nickname."
+                                />
+                                <SelectListGroup
+                                    placeholder="Status"
+                                    name="status"
+                                    value={this.state.status}
+                                    onChange={this.onChange}
+                                    error={this.props.errors.status}
+                                    options={options}
+                                    info="Give us an idea of where you are at in your career."
+                                />
+                                <TextFieldGroup
+                                    placeholder="Company"
+                                    name="company"
+                                    value={this.state.company}
+                                    onChange={this.onChange}
+                                    error={this.props.errors.company}
+                                    info="Could be your own company or one your worked for."
+                                />
+                                <TextFieldGroup
+                                    placeholder="Website"
+                                    name="website"
+                                    value={this.state.website}
+                                    onChange={this.onChange}
+                                    error={this.props.errors.website}
+                                    info="Could be your own website or company one."
+                                />
+                                <TextFieldGroup
+                                    placeholder="Location"
+                                    name="location"
+                                    value={this.state.location}
+                                    onChange={this.onChange}
+                                    error={this.props.errors.location}
+                                    info="City or City and State suggested. (eg Boston,MA)"
+                                />
+                                <TextFieldGroup
+                                    placeholder="* Skills"
+                                    name="skills"
+                                    value={this.state.skills}
+                                    onChange={this.onChange}
+                                    error={this.props.errors.skills}
+                                    info="Please use comma separated values.(eg. HTML, CSS, Javascript)"
+                                />
+                                <TextFieldGroup
+                                    placeholder="Github Username"
+                                    name="githubusername"
+                                    value={this.state.githubusername}
+                                    onChange={this.onChange}
+                                    error={this.props.errors.githubusername}
+                                    info="If you want your latest repos and a Github link, include your username."
+                                />
+                                <TextAreaFieldGroup
+                                    placeholder="Short Bio"
+                                    name="bio"
+                                    value={this.state.bio}
+                                    onChange={this.onChange}
+                                    errors={this.props.errors}
+                                    info="Tell us a little about yourself."
+                                />
+                                <div className="mb-3">
+                                    <button type="button" className="btn btn-light"
+                                        onClick={() => {
+                                            this.setState(prevState => ({
+                                                displaySocialInputs: !prevState.displaySocialInputs
+                                            }))
+                                        }}
+                                    >
+                                        Add Social Network Links
+                                    </button>
+                                    <span className="text-muted">Optional</span>
+                                </div>
+                                {socialInputs}
+                                <input type="submit" value="Submit" className="btn btn-info btn-block mt-4" />
+                            </form>
                         </div>
                     </div>
-                    <TextFieldGroup
-                        placeholder="Name"
-                        name="name"
-                        value={this.state.name}
-                        onChange={this.handleChange}
-                        error={this.state.errors.name} />
                 </div>
             </div>
         )
@@ -62,4 +236,4 @@ const mapStateToProps = state => ({
     errors: state.errors
 })
 
-export default connect(mapStateToProps)(CreateProfile)
+export default connect(mapStateToProps, { createProfile })(withRouter(CreateProfile))
