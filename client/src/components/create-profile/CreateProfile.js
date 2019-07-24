@@ -61,7 +61,7 @@ class CreateProfile extends Component {
     this.props.createProfile(profileData, this.props.history);
   }
 
-  onChange(e) {
+  onChange = (e)=> {
     this.setState({ [e.target.name]: e.target.value });
   }
 
