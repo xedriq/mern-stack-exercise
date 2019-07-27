@@ -25,6 +25,7 @@ import Profiles from './components/profiles/Profiles';
 import Profile from './components/profile/Profile';
 import NotFound from './components/not-found/NotFound';
 import Posts from './components/posts/Posts'
+import Post from './components/post/Post'
 
 
 // Check for token
@@ -82,6 +83,9 @@ function App() {
             <Route exact path='/not-found' component={NotFound} />
             <Switch>
               <PrivateRoute exact path='/feed' component={Posts} />
+            </Switch>
+            <Switch>
+              <PrivateRoute exact path='/post/:id' component={Post} />
             </Switch>
             <Route exact path='/not-found' component={NotFound} />
           </div>
